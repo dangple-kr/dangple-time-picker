@@ -141,44 +141,6 @@ class _DatePickerLayoutDelegate extends MultiChildLayoutDelegate {
   }
 }
 
-/// Different display modes of [CupertinoDatePicker].
-///
-/// See also:
-///
-///  * [CupertinoDatePicker], the class that implements different display modes
-///    of the iOS-style date picker.
-///  * [CupertinoPicker], the class that implements a content agnostic spinner UI.
-enum CupertinoDatePickerMode {
-  /// Mode that shows the date in hour, minute, and (optional) an AM/PM designation.
-  /// The AM/PM designation is shown only if [CupertinoDatePicker] does not use 24h format.
-  /// Column order is subject to internationalization.
-  ///
-  /// Example: ` 4 | 14 | PM `.
-  time,
-
-  /// Mode that shows the date in month, day of month, and year.
-  /// Name of month is spelled in full.
-  /// Column order is subject to internationalization.
-  ///
-  /// Example: ` July | 13 | 2012 `.
-  date,
-
-  /// Mode that shows the date as day of the week, month, day of month and
-  /// the time in hour, minute, and (optional) an AM/PM designation.
-  /// The AM/PM designation is shown only if [CupertinoDatePicker] does not use 24h format.
-  /// Column order is subject to internationalization.
-  ///
-  /// Example: ` Fri Jul 13 | 4 | 14 | PM `
-  dateAndTime,
-
-  /// Mode that shows the date in month and year.
-  /// Name of month is spelled in full.
-  /// Column order is subject to internationalization.
-  ///
-  /// Example: ` July | 2012 `.
-  monthYear,
-}
-
 // Different types of column in CupertinoDatePicker.
 enum _PickerColumnType {
   // Day of month column in date mode.
@@ -1079,7 +1041,12 @@ class _CupertinoDatePickerDateTimeState extends State<KoCupertinoDatePicker> {
       switch (localizations.datePickerDateTimeOrder) {
         case DatePickerDateTimeOrder.date_time_dayPeriod:
         case DatePickerDateTimeOrder.time_dayPeriod_date:
-          pickerBuilders.insert(0, _buildAmPmPicker);
+          final locale = Localizations.localeOf(context);
+
+          locale.countryCode == 'KR' && locale.languageCode == 'ko'
+              ? pickerBuilders.insert(0, _buildAmPmPicker)
+              : pickerBuilders.add(_buildAmPmPicker);
+
           columnWidths
               .add(_getEstimatedColumnWidth(_PickerColumnType.dayPeriod));
         case DatePickerDateTimeOrder.date_dayPeriod_time:
