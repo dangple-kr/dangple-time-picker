@@ -1043,10 +1043,15 @@ class _CupertinoDatePickerDateTimeState extends State<KoCupertinoDatePicker> {
         case DatePickerDateTimeOrder.time_dayPeriod_date:
           final locale = Localizations.localeOf(context);
 
-          locale.countryCode == 'KR' && locale.languageCode == 'ko'
-              ? pickerBuilders.insert(0, _buildAmPmPicker)
-              : pickerBuilders.add(_buildAmPmPicker);
+          switch (locale.languageCode) {
+            case 'ko':
+              pickerBuilders.insert(0, _buildAmPmPicker);
+              break;
 
+            default:
+              pickerBuilders.add(_buildAmPmPicker);
+              break;
+          }
           columnWidths
               .add(_getEstimatedColumnWidth(_PickerColumnType.dayPeriod));
         case DatePickerDateTimeOrder.date_dayPeriod_time:
